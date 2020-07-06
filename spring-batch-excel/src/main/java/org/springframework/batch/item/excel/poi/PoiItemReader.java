@@ -16,16 +16,16 @@
 
 package org.springframework.batch.item.excel.poi;
 
-import org.apache.poi.ss.usermodel.Row;
+import java.io.Closeable;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
+
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.batch.item.excel.AbstractExcelItemReader;
 import org.springframework.batch.item.excel.Sheet;
 import org.springframework.core.io.Resource;
-
-import java.io.Closeable;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
 
 /**
  * {@link org.springframework.batch.item.ItemReader} implementation which uses apache POI to read an Excel
@@ -82,7 +82,7 @@ public class PoiItemReader<T> extends AbstractExcelItemReader<T> {
             throw new IllegalStateException("InputStream MUST either support mark/reset, or be wrapped as a PushbackInputStream");
         }
         this.workbook = WorkbookFactory.create(workbookStream);
-        this.workbook.setMissingCellPolicy(Row.CREATE_NULL_AS_BLANK);
+        this.workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
     }
 
 }

@@ -16,7 +16,9 @@
 
 package org.springframework.batch.item.excel.poi;
 
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
@@ -88,7 +90,8 @@ public class PoiSheet implements Sheet {
                         Date date = cell.getDateCellValue();
                         cells.add(String.valueOf(date.getTime()));
                     } else {
-                        cells.add(String.valueOf(cell.getNumericCellValue()));
+                    	cell.setCellType(CellType.STRING);
+                        cells.add(cell.getStringCellValue());
                     }
                     break;
                 case BOOLEAN:
@@ -99,7 +102,11 @@ public class PoiSheet implements Sheet {
                     cells.add(cell.getStringCellValue());
                     break;
                 case FORMULA:
-                    cells.add(getFormulaEvaluator().evaluate(cell).formatAsString());
+                	try {
+                		cells.add(getFormulaEvaluator().evaluate(cell).formatAsString());
+					} catch (FormulaParseException e) {
+						cells.add(null);
+					}
                     break;
                 default:
                     throw new IllegalArgumentException("Cannot handle cells of type " + cell.getCellType());

@@ -78,9 +78,9 @@ public class PoiItemReader<T> extends AbstractExcelItemReader<T> {
     @Override
     protected void openExcelFile(final Resource resource) throws Exception {
         workbookStream = resource.getInputStream();
-        if (!workbookStream.markSupported() && !(workbookStream instanceof PushbackInputStream)) {
+        /* if (!workbookStream.markSupported() && !(workbookStream instanceof PushbackInputStream)) {
             throw new IllegalStateException("InputStream MUST either support mark/reset, or be wrapped as a PushbackInputStream");
-        }
+        } */
         this.workbook = WorkbookFactory.create(workbookStream);
         this.workbook.setMissingCellPolicy(MissingCellPolicy.CREATE_NULL_AS_BLANK);
     }
